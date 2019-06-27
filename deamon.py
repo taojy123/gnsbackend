@@ -32,7 +32,8 @@ pjoin = os.path.join
 WATCH_DIR = pjoin(os.getcwd(), 'input')
 TARGET_DIR = pjoin(os.getcwd(), 'output')
 DB_CONFIG = {
-    'host': '192.168.60.167',
+    # 'host': '192.168.60.167',
+    'host': '127.0.0.1',
     'user': 'root',
     'password': 'macroflag.com',
     'db': 'gns_poc',
@@ -72,8 +73,8 @@ def etl_step1(project):
             print(sql)
             cursor.execute(sql)
             for name in ['user_info', 'acc_info', 'bal_info', 'tran_info']:
-                # path = pjoin(WATCH_DIR, name).__repr__()
-                path = pjoin('D:\\mysql-5.7.26-winx64\\data', name + '.txt').__repr__()
+                path = pjoin(WATCH_DIR, name + '.txt').__repr__()
+                # path = pjoin('D:\\mysql-5.7.26-winx64\\data', name + '.txt').__repr__()
                 sql = "load data infile %s into table  gns_poc.%s;" % (path, name)
                 print(sql)
                 cursor.execute(sql)

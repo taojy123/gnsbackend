@@ -1,0 +1,7 @@
+grant  all *.* to root@'%' identified by 'macroflag.com' with grant option;
+flush privileges;
+
+
+mysql -uroot -pmacroflag.com  gns_poc <  D:/workspace/gnsbackend/docs/gns_poc.sql
+
+
