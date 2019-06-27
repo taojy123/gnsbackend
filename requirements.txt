@@ -2,3 +2,4 @@
 django>2
 easyserializer
 PyMySQL
+django-cors-headers==3.0.1
