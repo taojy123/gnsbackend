@@ -6,7 +6,7 @@ from tasks.models import App, ETLTask, BuildingTask
 
 def apps(request):
     rs = []
-    for app in App.objects.order_by('-id'):
+    for app in App.objects.order_by('id'):
         rs.append(app.serialize())
     return JsonResponse({'data': rs})
 
@@ -44,11 +44,13 @@ def app_dir(request, app_id):
     if request.method == 'POST':
         input_dir = request.POST.get('input_dir')
         output_dir = request.POST.get('output_dir')
+        fake = request.POST.get('fake', False)
         if input_dir:
             app.input_dir = input_dir
         if output_dir:
             app.output_dir = output_dir
-        app.save()
+        if not fake:
+            app.save()
     r = {
         'input_dir': app.input_dir,
         'input_exists': app.input_exists,
