@@ -44,7 +44,7 @@ def buildingtasks(request):
 def app_dir(request, app_id):
     app = get_object_or_404(App, id=app_id)
     if request.method == 'POST':
-        data = json.loads(request.body)
+        data = json.loads(request.body.decode())
         input_dir = data.get('input_dir')
         output_dir = data.get('output_dir')
         fake = data.get('fake', False)
