@@ -102,6 +102,9 @@ baseUri: http://gns.tslow.cn
   displayName: 获取所有ETL任务列表
   get:
     description: 获取所有ETL任务列表
+    queryParameters:
+      app_id:
+      name:
     responses:
       200:
         body:
@@ -118,7 +121,8 @@ baseUri: http://gns.tslow.cn
                     "status": "成功",
                     "step": 2,
                     "project_name": "2019-06-25 13:16:49",
-                    "app_name": "借转贷应用"
+                    "app_name": "借转贷应用",
+                    "app_id": 1
                   }
                 ]
               }
@@ -128,6 +132,9 @@ baseUri: http://gns.tslow.cn
   displayName: 获取所有建模任务列表
   get:
     description: 获取所有建模任务列表
+    queryParameters:
+      app_id:
+      name:
     responses:
       200:
         body:
@@ -146,7 +153,45 @@ baseUri: http://gns.tslow.cn
                     "step": 2,
                     "target": "C:/output/result2/",
                     "project_name": "2019-06-25 13:16:49",
-                    "app_name": "借转贷应用"
+                    "app_name": "借转贷应用",
+                    "app_id": 1
                   }
                 ]
               }
+
+
+/tasks/apps/{app_id}/dir/:
+  displayName: 应用目录配置
+  get:
+    description: 获取应用目录信息
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                  "input_dir": "D:\\workspace\\gnsbackend\\input",
+                  "input_exists": true,
+                  "output_dir": "D:\\workspace\\gnsbackend\\output",
+                  "output_exists": false
+              }
+  post:
+    description: 设置应用输入和输出目录
+    body:
+      multipart/form-data:
+        properties:
+          input_dir:
+          output_dir:
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                  "input_dir": "D:\\workspace\\gnsbackend\\input",
+                  "input_exists": true,
+                  "output_dir": "D:\\workspace\\gnsbackend\\output",
+                  "output_exists": false
+              }
+
+

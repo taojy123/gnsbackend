@@ -13,7 +13,7 @@ class CommonAdmin(admin.ModelAdmin):
 
 @admin.register(App)
 class AppAdmin(CommonAdmin):
-    list_display = ('id', 'name', 'status')
+    list_display = ('id', 'name', 'status', 'input_dir', 'output_dir')
 
 
 @admin.register(Project)

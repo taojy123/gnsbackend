@@ -136,8 +136,8 @@ def building_step1(project):
                 cursor.execute("select * from sxj;")
                 rs = cursor.fetchall()
                 dist = 'sxj.txt'
-                target = pjoin(TARGET_DIR, dist)
-                f = open(target, 'w')
+                path = pjoin(TARGET_DIR, dist)
+                f = open(path, 'w')
                 for r in rs:
                     r = [str(v) for v in r]
                     f.write(','.join(r))
@@ -146,7 +146,7 @@ def building_step1(project):
 
             task.state = 2
             task.dist = dist
-            task.target = target
+            task.target = TARGET_DIR
         except:
             err = traceback.format_exc()
             print(err)
@@ -164,19 +164,19 @@ def building_step1(project):
     task.finished_at = timezone.now()
     task.save()
 
-    if task.state == 2:
-        building_step2(project)
-
-
-def building_step2(project):
-    tryprint(4)
-    task = project.buildingtask_set.create(name='逾期模型计算', step=2, state=1)
-    time.sleep(8)
-    task.state = 2
-    task.dist = 'ret.txt'
-    task.target = 'C:/output/result2/'
-    task.finished_at = timezone.now()
-    task.save()
+#     if task.state == 2:
+#         building_step2(project)
+#
+#
+# def building_step2(project):
+#     tryprint(4)
+#     task = project.buildingtask_set.create(name='逾期模型计算', step=2, state=1)
+#     time.sleep(8)
+#     task.state = 2
+#     task.dist = 'ret.txt'
+#     task.target = 'C:/output/result2/'
+#     task.finished_at = timezone.now()
+#     task.save()
 
 
 while True:
@@ -196,7 +196,8 @@ while True:
 
     tryprint('begin')
 
-    app_name = getfile('ok.txt') or '借转贷应用'
+    # app_name = getfile('ok.txt') or '借转贷应用'
+    app_name = '借转贷应用'
     app, _ = App.objects.get_or_create(name=app_name)
     project = app.project_set.create(name=str(timezone.now())[:19])
 

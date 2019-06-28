@@ -1,3 +1,4 @@
+import os
 
 from django.conf import settings
 from django.db import models
@@ -15,6 +16,8 @@ STATE_CHOICE = (
 class App(models.Model, SerializeableObject):
 
     name = models.CharField(max_length=100, blank=True)
+    input_dir = models.CharField(max_length=200, blank=True)
+    output_dir = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.name
@@ -34,6 +37,14 @@ class App(models.Model, SerializeableObject):
     @property
     def project(self):
         return self.project_set.order_by('-id').first()
+
+    @property
+    def input_exists(self):
+        return os.path.exists(self.input_dir)
+
+    @property
+    def output_exists(self):
+        return os.path.exists(self.output_dir)
 
     def default_exclude_fields(self):
         return ['objects', 'pk']
@@ -81,14 +92,12 @@ class Project(models.Model, SerializeableObject):
 
     @property
     def percent(self):
-        if self.buildingtask_set.filter(step=2, state=2).exists():
+        if self.buildingtask_set.filter(state=2).exists():
             return 100
-        if self.buildingtask_set.filter(step=2).exists():
-            return 81
-        if self.buildingtask_set.filter(step=1).exists():
-            return 67
+        if self.buildingtask_set.exists():
+            return 88
         if self.etltask_set.filter(step=2).exists():
-            return 38
+            return 42
         if self.etltask_set.filter(step=1).exists():
             return 12
         return 0
@@ -142,6 +151,7 @@ class ETLTask(models.Model, SerializeableObject):
         r = self.serialize()
         r['project_name'] = self.project.name
         r['app_name'] = self.app.name
+        r['app_id'] = self.app.id
         return r
 
 
@@ -152,6 +162,7 @@ class BuildingTask(models.Model, SerializeableObject):
     info = models.TextField(blank=True)
     dist = models.CharField(max_length=100, blank=True)
     target = models.CharField(max_length=300, blank=True)
+    ks = models.CharField(max_length=20, blank=True)
     state = models.IntegerField(choices=STATE_CHOICE, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     finished_at = models.DateTimeField(blank=True, null=True)
@@ -168,15 +179,6 @@ class BuildingTask(models.Model, SerializeableObject):
         return self.get_state_display()
 
     @property
-    def ks(self):
-        if self.app.name != '借转贷应用':
-            if self.step == 1:
-                return 0.45
-            else:
-                return 0.51
-        raise 1
-
-    @property
     def duration(self):
         t = self.finished_at or timezone.now()
         return int((t - self.created_at).total_seconds())
@@ -188,6 +190,7 @@ class BuildingTask(models.Model, SerializeableObject):
         r = self.serialize()
         r['project_name'] = self.project.name
         r['app_name'] = self.app.name
+        r['app_id'] = self.app.id
         return r
 
 
