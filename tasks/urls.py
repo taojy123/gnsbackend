@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time    : 2019-06-08 16:39
-# @Author  : Jinpin Hong
+
 from django.urls import path
 
 from tasks import views
