@@ -1,6 +1,7 @@
 # Python3.7
 
 import os
+import re
 
 os.chdir(os.path.dirname(__file__))
 
@@ -45,10 +46,24 @@ highlight_js = '''
 ''' % open('res/highlight.js').read()
 content = content.replace('<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>', highlight_js)
 
+print('resource modify finish')
 
 content = content.replace('<p><strong>Type</strong>: object</p>', '')
 content = content.replace('<p><strong>Type</strong>: any</p>', '')
 
+raml_content = open('api.raml', encoding='utf8').read()
+rs = re.findall(r'baseUri:(.+)', raml_content)
+if rs:
+    host = rs[0].strip()
+else:
+    host = ''
+
+uris = re.findall(r'<h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>(.+?)</h4>', content)
+for uri in uris:
+    origin = '<h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>%s</h4>' % uri
+    url = host + uri
+    target = '<h4 class="modal-title" id="myModalLabel"><a href="%s" class="badge badge_get">get</a> <span class="parent"></span>%s</h4>' % (url, uri)
+    content = content.replace(origin, target)
 
 print('content handle finish')
 
